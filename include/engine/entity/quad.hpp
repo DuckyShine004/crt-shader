@@ -30,6 +30,13 @@ class Quad {
         {-1.0f, 1.0f, 0.0f}
     };
 
+    static inline constexpr float _NORMALS[4][3] = {
+        {0.0f, 0.0f, 1.0f},
+        {0.0f, 0.0f, 1.0f},
+        {0.0f, 0.0f, 1.0f},
+        {0.0f, 0.0f, 1.0f}
+    };
+
     static inline constexpr float _UVS[4][2] = {
         {0.0f, 0.0f},
         {1.0f, 0.0f},

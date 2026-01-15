@@ -63,6 +63,10 @@ void Camera::upload_model_view_projection(Shader &shader) {
     shader.set_matrix4fv("u_projection", this->_MVP_component.projection);
 }
 
+void Camera::upload_position(Shader &shader) {
+    shader.set_vector3f("u_view_position", this->position);
+}
+
 void Camera::move(Direction direction, float delta_time) {
     float velocity = this->_SPEED * delta_time;
 

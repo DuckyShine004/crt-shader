@@ -16,6 +16,7 @@ class Mesh {
     void add_vertex(Vertex &vertex);
     void add_vertex(float x, float y, float z);
     void add_vertex(float x, float y, float z, float u, float v);
+    void add_vertex(float x, float y, float z, float u, float v, float nx, float ny, float nz);
 
     void add_index(GLuint index);
 
@@ -42,6 +43,23 @@ class Mesh {
         }
     }
 
+    template <std::size_t N> void add_vertices(const float (&vertices)[N][3], const float (&normals)[N][3], const float (&uvs)[N][2]) {
+        for (int i = 0; i < N; ++i) {
+            float x = vertices[i][0];
+            float y = vertices[i][1];
+            float z = vertices[i][2];
+
+            float nx = normals[i][0];
+            float ny = normals[i][1];
+            float nz = normals[i][2];
+
+            float u = uvs[i][0];
+            float v = uvs[i][1];
+
+            this->_vertices.emplace_back(x, y, z, nx, ny, nz, u, v);
+        }
+    }
+
     template <std::size_t N> void add_indices(const GLuint (&indices)[N]) {
         this->_indices.insert(this->_indices.end(), std::begin(indices), std::end(indices));
     }
@@ -56,6 +74,7 @@ class Mesh {
 
   private:
     static inline constexpr unsigned int _POSITION_ATTRIBUTE = 0;
+    static inline constexpr unsigned int _NORMAL_ATTRIBUTE = 1;
     static inline constexpr unsigned int _UV_ATTRIBUTE = 2;
 
     GLuint _vao;

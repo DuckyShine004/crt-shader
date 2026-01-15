@@ -21,9 +21,11 @@ void Mesh::upload() {
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->get_indices_size(), this->_indices.data(), GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(this->_POSITION_ATTRIBUTE);
+    glEnableVertexAttribArray(this->_NORMAL_ATTRIBUTE);
     glEnableVertexAttribArray(this->_UV_ATTRIBUTE);
 
     glVertexAttribPointer(this->_POSITION_ATTRIBUTE, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)offsetof(Vertex, position));
+    glVertexAttribPointer(this->_NORMAL_ATTRIBUTE, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)offsetof(Vertex, normal));
     glVertexAttribPointer(this->_UV_ATTRIBUTE, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)offsetof(Vertex, uv));
 
     glBindVertexArray(0);
@@ -63,6 +65,10 @@ void Mesh::add_vertex(float x, float y, float z) {
 
 void Mesh::add_vertex(float x, float y, float z, float u, float v) {
     this->_vertices.emplace_back(x, y, z, u, v);
+}
+
+void Mesh::add_vertex(float x, float y, float z, float u, float v, float nx, float ny, float nz) {
+    this->_vertices.emplace_back(x, y, z, u, v, nx, ny, nz);
 }
 
 void Mesh::add_index(GLuint index) {

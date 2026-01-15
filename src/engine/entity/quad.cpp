@@ -36,7 +36,7 @@ Mesh &Quad::get_mesh() {
 }
 
 void Quad::create() {
-    this->_mesh.add_vertices(this->_VERTICES, this->_UVS);
+    this->_mesh.add_vertices(this->_VERTICES, this->_NORMALS, this->_UVS);
 
     this->_mesh.add_indices(this->_INDICES);
 }

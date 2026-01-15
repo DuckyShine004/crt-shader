@@ -12,10 +12,13 @@ struct Vertex {
     Vertex() : Vertex(0.0f, 0.0f, 0.0f) {
     }
 
-    Vertex(float x, float y, float z) : position(x, y, z), uv(0.0f, 0.0f) {
+    Vertex(float x, float y, float z) : Vertex(x, y, z, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f) {
     }
 
-    Vertex(float x, float y, float z, float u, float v) : position(x, y, z), uv(u, v) {
+    Vertex(float x, float y, float z, float u, float v) : Vertex(x, y, z, 0.0f, 0.0f, 0.0f, u, v) {
+    }
+
+    Vertex(float x, float y, float z, float nx, float ny, float nz, float u, float v) : position(x, y, z), normal(nx, ny, nz), uv(u, v) {
     }
 };
 

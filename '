@@ -49,7 +49,6 @@ void Engine::update(GLFWwindow *window, float delta_time) {
 
 void Engine::render() {
     glBindFramebuffer(GL_FRAMEBUFFER, this->_fbo);
-    glEnable(GL_DEPTH_TEST);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     Shader &scene = ShaderManager::get_instance().get_shader("scene");
@@ -59,11 +58,11 @@ void Engine::render() {
     this->_camera.upload_model_view_projection(scene);
     this->_camera.upload_position(scene);
 
-    scene.set_vector3f("u_light.direction", -0.2f, -1.0f, -0.3f);
+    scene.set_vector3f("light.direction", glm::vec3(1.0f));
 
-    scene.set_vector3f("u_light.ambient", glm::vec3(0.1f));
-    scene.set_vector3f("u_light.diffuse", glm::vec3(0.8f));
-    scene.set_vector3f("u_light.specular", glm::vec3(1.0f));
+    scene.set_vector3f("light.ambient", glm::vec3(0.1f));
+    scene.set_vector3f("light.diffuse", glm::vec3(0.8f));
+    scene.set_vector3f("light.specular", glm::vec3(1.0f));
 
     for (Sphere &sphere : this->_spheres) {
         sphere.render(scene);
@@ -74,8 +73,7 @@ void Engine::render() {
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glDisable(GL_DEPTH_TEST);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT);
 
     Shader &crt = ShaderManager::get_instance().get_shader("crt");
 

@@ -56,6 +56,8 @@ class Camera {
 
     void upload_model_view_projection(engine::shader::Shader &shader);
 
+    void upload_position(engine::shader::Shader &shader);
+
     void move(Direction direction, float delta_time);
 
     void rotate(double x, double y);

@@ -25,6 +25,7 @@ class Shader {
     void set_vector2f(const GLchar *name, float x, float y);
     void set_vector2f(const GLchar *name, glm::vec2 vector);
 
+    void set_vector3f(const GLchar *name, float x, float y, float z);
     void set_vector3f(const GLchar *name, glm::vec3 vector);
     void set_vector3f(const GLchar *name, const float (&array)[3]);
 

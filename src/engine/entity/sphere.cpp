@@ -44,10 +44,14 @@ void Sphere::create() {
             float x = xy * cosf(sector_angle);
             float y = xy * sinf(sector_angle);
 
+            float nx = x * length_inverse;
+            float ny = y * length_inverse;
+            float nz = z * length_inverse;
+
             float u = (float)sector_index / this->_SECTORS;
             float v = (float)stack_index / this->_STACKS;
 
-            this->_mesh.add_vertex(x, y, z, u, v);
+            this->_mesh.add_vertex(x, y, z, nx, ny, nz, u, v);
         }
     }
 
@@ -73,11 +77,16 @@ void Sphere::create() {
     this->_mesh.upload();
 }
 
+/**
+ * @brief Renders the sphere by setting up uniforms. Also NO NEED to apply scaling since we
+ * it's scaled properly at mesh creation.
+ *
+ * @param shader
+ */
 void Sphere::render(Shader &shader) {
     glm::mat4 model(1.0f);
 
     model = glm::translate(model, this->_position);
-    model = glm::scale(model, glm::vec3(this->_RADIUS));
 
     shader.set_matrix4fv("u_model", model);
 
