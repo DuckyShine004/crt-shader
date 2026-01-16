@@ -30,6 +30,9 @@ class Engine {
     GLuint _texture;
     GLuint _rbo;
 
+    GLuint _shadow_fbo;
+    GLuint _shadow_texture;
+
     engine::entity::Quad _crt;
 };
 

@@ -24,9 +24,13 @@ Quad::Quad() : Quad(0.0f, 0.0f, 0.0f, 1.0f, 1.0f) {
 Quad::Quad(float x, float y, float z) : Quad(x, y, z, 1.0f, 1.0f) {
 }
 
-Quad::Quad(float x, float y, float z, float width, float height) {
+Quad::Quad(float x, float y, float z, float width, float height) : Quad(x, y, z, width, height, 0.0f, 0.0f, 0.0f) {
+}
+
+Quad::Quad(float x, float y, float z, float width, float height, float angle_x, float angle_y, float angle_z) {
     transform.position = glm::vec3(x, y, z);
     transform.scale = glm::vec3(width, height, 1.0f);
+    transform.set_rotation_euler_xyz(angle_x, angle_y, angle_z);
 
     this->create();
 }

@@ -17,6 +17,8 @@ class Quad {
 
     Quad(float x, float y, float z, float width, float height);
 
+    Quad(float x, float y, float z, float width, float height, float angle_x, float angle_y, float angle_z);
+
     engine::model::Mesh &get_mesh();
 
     void render(shader::Shader &shader);

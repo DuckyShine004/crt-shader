@@ -28,6 +28,14 @@ struct Transform {
 
     void set_rotation_euler_z(float angle) {
     }
+
+    void set_rotation_euler_xyz(float angle_x, float angle_y, float angle_z) {
+        glm::quat quaternion_x = glm::angleAxis(glm::radians(angle_x), glm::vec3(1.0f, 0.0f, 0.0f));
+        glm::quat quaternion_y = glm::angleAxis(glm::radians(angle_y), glm::vec3(0.0f, 1.0f, 0.0f));
+        glm::quat quaternion_z = glm::angleAxis(glm::radians(angle_z), glm::vec3(0.0f, 0.0f, 1.0f));
+
+        this->rotation = quaternion_z * quaternion_y * quaternion_x;
+    }
 };
 
 } // namespace engine::model

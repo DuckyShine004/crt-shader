@@ -8,19 +8,53 @@ struct Light {
     vec3 specular;
 };
 
+const vec2 poisson[4] = vec2[](
+        vec2(-0.94201624, -0.39906216),
+        vec2(0.94558609, -0.76890725),
+        vec2(-0.094184101, -0.92938870),
+        vec2(0.34495938, 0.29387760)
+    );
+
 in vec3 f_fragment_position;
 
 in vec3 f_normal;
 
 in vec3 f_colour;
 
+in vec4 f_shadow_position;
+in vec4 f_light_space_position;
+
 uniform Light u_light;
 
 uniform vec3 u_view_position;
 
+uniform sampler2D u_shadow_map;
+
 out vec4 o_colour;
 
-vec3 get_phong(Light light, vec3 normal, vec3 view_position, vec3 fragment_position, vec3 colour) {
+float get_shadow(sampler2D shadow_map, vec4 light_space_position, vec4 shadow_position) {
+    vec3 position = shadow_position.xyz / shadow_position.w;
+
+    if (position.x < 0.0f || position.x > 1.0f || position.y < 0.0f || position.y > 1.0f) {
+        return 1.0f;
+    }
+
+    float shadow = 1.0f;
+
+    float bias = 0.005f;
+
+    for (int i = 0; i < 4; ++i) {
+        float depth = texture(u_shadow_map, position.xy + poisson[i] / 700.0f).r;
+
+        if (depth < (position.z - bias)) {
+            shadow -= 0.2f;
+        }
+    }
+
+    return shadow;
+}
+
+vec3 get_phong(Light light, vec3 normal, vec3 view_position, vec3 fragment_position, vec3 colour, float shadow) {
     vec3 N = normalize(normal);
     vec3 L = normalize(-light.direction);
 
@@ -33,11 +67,17 @@ vec3 get_phong(Light light, vec3 normal, vec3 view_position, vec3 fragment_posit
     float specular_strength = pow(max(dot(V, R), 0.0f), 32.0f);
     vec3 specular = light.specular * specular_strength;
 
-    return light.ambient * colour + diffuse * colour + specular;
+    vec3 ambient_light = light.ambient * colour;
+    vec3 diffuse_light = shadow * diffuse * colour;
+    vec3 specular_light = shadow * specular;
+
+    return ambient_light + diffuse_light + specular_light;
 }
 
 void main() {
-    vec3 phong = get_phong(u_light, f_normal, u_view_position, f_fragment_position, f_colour);
+    float shadow = get_shadow(u_shadow_map, f_light_space_position, f_shadow_position);
+
+    vec3 phong = get_phong(u_light, f_normal, u_view_position, f_fragment_position, f_colour, shadow);
 
     o_colour = vec4(phong, 1.0f);
 }

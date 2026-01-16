@@ -7,10 +7,13 @@
 #include "engine/engine.hpp"
 
 #include "manager/shader_manager.hpp"
+#include "manager/display_manager.hpp"
 
 #include "logger/logger_macros.hpp"
 
 using namespace engine;
+
+using namespace manager;
 
 namespace application {
 
@@ -44,7 +47,7 @@ bool Application::initialise() {
     glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
     glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 
-    GLFWwindow *window = glfwCreateWindow(1280, 720, "Octree Visualiser", nullptr, nullptr);
+    GLFWwindow *window = glfwCreateWindow(DisplayManager::WIDTH, DisplayManager::HEIGHT, "Octree Visualiser", nullptr, nullptr);
 
     if (window == nullptr) {
         LOG_ERROR("Failed to create window");
@@ -80,8 +83,8 @@ void Application::load() {
 
     glViewport(0, 0, width, height);
 
-    /* Also initialise other application instances before updates and renders */
-    manager::ShaderManager::get_instance().initialise();
+    ShaderManager::get_instance().initialise();
+    DisplayManager::get_instance().initialise();
 }
 
 void Application::run() {
@@ -154,6 +157,8 @@ void Application::on_window_resize(GLFWwindow *window, int width, int height) {
 
 void Application::handle_window_resize(GLFWwindow *window, int width, int height) {
     glViewport(0, 0, width, height);
+
+    DisplayManager::get_instance().update(width, height);
 }
 
 void Application::on_cursor(GLFWwindow *window, double x, double y) {
