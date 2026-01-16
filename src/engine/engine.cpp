@@ -112,9 +112,6 @@ void Engine::render() {
     int display_height = display_manager.get_height();
 
     if (display_manager.is_window_resized()) {
-
-        LOG_DEBUG("Width: {}, Height: {}", display_width, display_height);
-
         glBindTexture(GL_TEXTURE_2D, this->_texture);
 
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, display_width, display_height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
@@ -162,6 +159,10 @@ void Engine::render() {
 
     scene.set_matrix4fv("u_bias", shadow_bias);
     scene.set_matrix4fv("u_light_space", light_space);
+
+    scene.set_float("u_fog.start", 1.0f);
+    scene.set_float("u_fog.end", 50.0f);
+    scene.set_vector3f("u_fog.colour", glm::vec3(0.5f));
 
     // Bind shadow texture
     scene.set_integer("u_shadow_map", 1);

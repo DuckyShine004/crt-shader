@@ -1,5 +1,12 @@
 #version 330 core
 
+struct Fog {
+    float start;
+    float end;
+
+    vec3 colour;
+};
+
 struct Light {
     vec3 direction;
 
@@ -24,6 +31,7 @@ in vec3 f_colour;
 in vec4 f_shadow_position;
 in vec4 f_light_space_position;
 
+uniform Fog u_fog;
 uniform Light u_light;
 
 uniform vec3 u_view_position;
@@ -74,10 +82,27 @@ vec3 get_phong(Light light, vec3 normal, vec3 view_position, vec3 fragment_posit
     return ambient_light + diffuse_light + specular_light;
 }
 
+float get_fog(Fog fog, float distance) {
+    float density = 0.05f;
+
+    float power = -density * density * distance * distance;
+
+    // float fog_factor = exp(power);
+    float fog_factor = (fog.end - distance) / (fog.end - fog.start);
+
+    return clamp(fog_factor, 0.0f, 1.0f);
+}
+
 void main() {
+    float distance_to_fragment = length(u_view_position - f_fragment_position);
+
     float shadow = get_shadow(u_shadow_map, f_light_space_position, f_shadow_position);
+
+    float fog = get_fog(u_fog, distance_to_fragment);
 
     vec3 phong = get_phong(u_light, f_normal, u_view_position, f_fragment_position, f_colour, shadow);
 
-    o_colour = vec4(phong, 1.0f);
+    vec3 colour = mix(u_fog.colour, phong, fog);
+
+    o_colour = vec4(colour, 1.0f);
 }
