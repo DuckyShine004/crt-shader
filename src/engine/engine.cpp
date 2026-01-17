@@ -72,6 +72,8 @@ void Engine::initialise() {
 
 void Engine::update(GLFWwindow *window, float delta_time) {
     this->_camera.update(window, delta_time);
+
+    // Rotate the camera around the origin at an angle
 }
 
 // Generate shadow map -> Render scene as texture with lighting + shadow sampling -> Apply CRT filter
